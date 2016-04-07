@@ -1,0 +1,3 @@
+Updated {updated_files} files in {updated_dirs} directories in {duration:.2f} seconds.
+
+Deleted {deleted_files} stale files and {deleted_dirs} stale directories.
