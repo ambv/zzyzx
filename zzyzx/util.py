@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 
 from collections import namedtuple
+import configparser
 from contextlib import contextmanager
 from functools import cmp_to_key
+from functools import update_wrapper
 import getpass
 import imaplib
 import locale
@@ -24,6 +26,29 @@ except locale.Error:
 class ExpandUserPath(click.Path):
     def convert(self, value, param, ctx):
         return super().convert(os.path.expanduser(value), param, ctx)
+
+
+@click.group()
+@click.option(
+    '--config-path',
+    default='~/.zzyzx',
+    type=ExpandUserPath(exists=True, dir_okay=False, allow_dash=True),
+    help='Where to find the INI file with configuration.',
+)
+@click.pass_context
+def cli(ctx, config_path):
+    """The last Notes manager on Earth."""
+    cfg = configparser.RawConfigParser()
+    cfg.read([config_path])
+    ctx.obj['cfg'] = cfg
+
+
+def pass_cfg(f):
+    @click.pass_context
+    def new_func(ctx, *args, **kwargs):
+        cfg = ctx.obj['cfg']
+        return ctx.invoke(f, cfg, *args, **kwargs)
+    return update_wrapper(new_func, f)
 
 
 def get_user():
@@ -107,6 +132,12 @@ def parse_list_responses(lines):
         result.append(d)
     result.sort(key=_list_response_key)
     return result
+
+
+def gen_existing_files(path):
+    for root, dirs, files in os.walk(path):
+        for file in files:
+            yield os.path.join(root, file)
 
 
 def gen_existing_dirs(path):

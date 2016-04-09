@@ -45,7 +45,11 @@ It requires Python 3.5+ and Click. Just install it from PyPI::
    [backup]
    repo_path=~/Notes
    ignore_prefix=INBOX.Notes
-   $ zzyzx
+
+   [markdown]
+   path=~/Dropbox/Notes
+   $ zzyzx backup
+   $ zzyzx md
 
 
 Why the name ``zzyzx``?
@@ -63,6 +67,14 @@ your other computers will see a lot of duplicate files.
 
 Changes
 -------
+
+2016.4.1
+~~~~~~~~
+
+* backwards incompatible: ``zzyzx`` functionality now available as
+  ``zzyzx backup``
+* new functionality: ``zzyzx md`` unpacks .eml into text files and
+  attachments, translating HTML into Markdown
 
 2016.4.0
 ~~~~~~~~
