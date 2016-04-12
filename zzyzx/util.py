@@ -13,6 +13,7 @@ import re
 import shutil
 import subprocess
 from tempfile import NamedTemporaryFile
+import unicodedata
 
 import click
 import pkg_resources
@@ -137,7 +138,7 @@ def parse_list_responses(lines):
 def gen_existing_files(path):
     for root, dirs, files in os.walk(path):
         for file in files:
-            yield os.path.join(root, file)
+            yield unicodedata.normalize('NFD', os.path.join(root, file))
 
 
 def gen_existing_dirs(path):
@@ -148,7 +149,7 @@ def gen_existing_dirs(path):
                 dirnames.remove(dirname)
 
         for dirname in dirnames:
-            yield os.path.join(dirpath, dirname)
+            yield unicode.normalize('NFD', os.path.join(dirpath, dirname))
 
 
 def delete_directories(dirs_to_delete):
@@ -194,6 +195,7 @@ def make_filename_safe(name):
     name = name.replace('\n', '_')
     while '__' in name:
         name = name.replace('__', '_')
+    name = unicodedata.normalize('NFD', name)
 
     return name
 

@@ -5,6 +5,7 @@ import email.parser
 import email.utils
 import os
 import time
+import unicodedata
 
 import click
 
@@ -48,7 +49,12 @@ def backup(cfg):
                 p = os.path.join(notes_dir, path)
                 return os.path.islink(p) or os.path.isfile(p)
 
-            old_files = set(filter(symlink_or_file, os.listdir(notes_dir)))
+            old_files = set(
+                map(
+                    lambda fn: unicodedata.normalize('NFD', fn),
+                    filter(symlink_or_file, os.listdir(notes_dir)),
+                ),
+            )
             updated_files = backup_mailbox(conn, d, notes_dir)
             util.delete_files(notes_dir, old_files - updated_files)
             updated_dirs.add(notes_dir)

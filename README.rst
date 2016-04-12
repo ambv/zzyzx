@@ -75,6 +75,9 @@ Changes
   ``zzyzx backup``
 * new functionality: ``zzyzx md`` unpacks .eml into text files and
   attachments, translating HTML into Markdown
+* bugfix: existing and newly created filenames are normalized to NFD;
+  existing file tracking won't be so eager to delete files anymore on
+  OS X
 
 2016.4.0
 ~~~~~~~~
