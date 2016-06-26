@@ -149,7 +149,7 @@ def gen_existing_dirs(path):
                 dirnames.remove(dirname)
 
         for dirname in dirnames:
-            yield unicode.normalize('NFD', os.path.join(dirpath, dirname))
+            yield unicodedata.normalize('NFD', os.path.join(dirpath, dirname))
 
 
 def delete_directories(dirs_to_delete):
@@ -190,6 +190,8 @@ def make_filename_safe(name):
 
     name = name.lower()
 
+    name = name.replace('/', '_')
+    name = name.replace('\\', '_')
     name = name.replace(' ', '_')
     name = name.replace('\t', '_')
     name = name.replace('\n', '_')

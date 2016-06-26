@@ -68,6 +68,12 @@ your other computers will see a lot of duplicate files.
 Changes
 -------
 
+2016.6.0
+~~~~~~~~
+
+* bugfix: slashes and backslashes weren't properly escaped for title
+  symlinks
+
 2016.4.1
 ~~~~~~~~
 
