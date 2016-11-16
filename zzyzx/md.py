@@ -7,11 +7,11 @@ import mimetypes
 import os
 
 import click
-import magic
 
 from zzyzx import util
 
 try:
+    import magic
     from zzyzx import markdownify
 except ImportError:
     markdownify = None
