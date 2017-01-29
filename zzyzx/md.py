@@ -21,6 +21,7 @@ except ImportError:
 def md(cfg):
     """Reverse-engineers HTML notes to Markdown."""
 
+    ext = cfg['markdown'].get('extension', '.txt')
     repo_path = os.path.realpath(os.path.expanduser(cfg['backup']['repo_path']))
     try:
         markdown_path = os.path.realpath(
@@ -42,7 +43,7 @@ def md(cfg):
         ),
     )
     for eml in eml_files:
-        txt = eml[:-4] + '.txt'
+        txt = eml[:-4] + ext
         eml_path = os.path.join(repo_path, eml)
         txt_path = os.path.join(markdown_path, txt)
         saved_files = extract_files(eml_path, txt_path)
@@ -62,6 +63,12 @@ def extract_files(
     basename, _ = os.path.splitext(dst)
     with open(src, 'rb') as eml:
         msg = email_parser.parse(eml)
+    created = email.utils.parsedate_to_datetime(
+        msg['x-mail-created-date'],
+    )
+    modified = email.utils.parsedate_to_datetime(
+        msg['date'],
+    )
     text_parts = {}
     counter = 0
     for part in msg.walk():
@@ -105,6 +112,9 @@ def extract_files(
         with open(filename, 'w') as f:
             f.write(data)
             files.add(filename)
+    for f in files:
+        # note: we're cheating, putting creation time as access time
+        os.utime(f, (created.timestamp(), modified.timestamp()))
     return files
 
 

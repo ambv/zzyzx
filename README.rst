@@ -48,6 +48,7 @@ It requires Python 3.5+ and Click. Just install it from PyPI::
 
    [markdown]
    path=~/Dropbox/Notes
+   extension=.txt
    $ zzyzx backup
    $ zzyzx md
 
@@ -67,6 +68,12 @@ your other computers will see a lot of duplicate files.
 
 Changes
 -------
+
+2017.1.0
+~~~~~~~~
+
+* also update the creation and modification date in the Markdown export
+* allow customization of the Markdown export file extensions
 
 2016.6.0
 ~~~~~~~~
