@@ -74,6 +74,8 @@ Changes
 
 * also update the creation and modification date in the Markdown export
 * allow customization of the Markdown export file extensions
+* allow exporting folder-based hashtags (for example for use with Bear
+  editor)
 
 2016.6.0
 ~~~~~~~~

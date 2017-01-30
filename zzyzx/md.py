@@ -22,6 +22,9 @@ def md(cfg):
     """Reverse-engineers HTML notes to Markdown."""
 
     ext = cfg['markdown'].get('extension', '.txt')
+    use_tags = cfg['markdown'].getboolean('use_tags')
+    tag = None
+
     repo_path = os.path.realpath(os.path.expanduser(cfg['backup']['repo_path']))
     try:
         markdown_path = os.path.realpath(
@@ -46,7 +49,9 @@ def md(cfg):
         txt = eml[:-4] + ext
         eml_path = os.path.join(repo_path, eml)
         txt_path = os.path.join(markdown_path, txt)
-        saved_files = extract_files(eml_path, txt_path)
+        if use_tags:
+            tag = os.path.dirname(txt).replace(' ', '-')
+        saved_files = extract_files(eml_path, txt_path, tag=tag)
         existing_files -= saved_files
     for f in sorted(existing_files):
         click.echo('Deleting stale file {}'.format(f))
@@ -56,6 +61,7 @@ def md(cfg):
 def extract_files(
     src,
     dst,
+    tag=None,
     email_parser=email.parser.BytesParser(policy=email.policy.default),
 ):
     click.echo('{} -> {}'.format(src, dst))
@@ -95,11 +101,15 @@ def extract_files(
         os.makedirs(os.path.dirname(dst), exist_ok=True)
         with open(dst, 'w') as f:
             f.write(html)
+            if tag:
+                f.write('\n#{}\n'.format(tag))
             files.add(dst)
     elif txt:
         os.makedirs(os.path.dirname(dst), exist_ok=True)
         with open(dst, 'w') as f:
             f.write(txt)
+            if tag:
+                f.write('\n#{}\n'.format(tag))
             files.add(dst)
     for filetype, data in text_parts.items():
         click.secho(
@@ -111,6 +121,8 @@ def extract_files(
         os.makedirs(os.path.dirname(filename), exist_ok=True)
         with open(filename, 'w') as f:
             f.write(data)
+            if tag:
+                f.write('\n#{}\n'.format(tag))
             files.add(filename)
     for f in files:
         # note: we're cheating, putting creation time as access time
