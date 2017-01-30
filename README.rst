@@ -93,6 +93,11 @@ between each other either).
 Changes
 -------
 
+???
+~~~
+
+* bugfix: in Markdown, don't produce vertical whitespace for nested lists
+
 2017.1.0
 ~~~~~~~~
 

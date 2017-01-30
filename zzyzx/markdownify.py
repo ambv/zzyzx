@@ -130,12 +130,16 @@ class MarkdownConverter:
 
     def convert_list(self, el, text):
         level = -1
+        if el.parent and el.parent.name == 'li':
+            text = '\n' + text
         while el:
-            if el.name in ('li', 'ol', 'ul'):
+            if el.name in ('ol', 'ul'):
                 level += 1
             el = el.parent
         if level:
-            text = '\n' + self.indent(text, 1) + '\n'
+            text = self.indent(text, 1)
+        while text.endswith('\t'):
+            text = text[:-1]
         return text
 
     convert_ul = convert_list
@@ -159,7 +163,10 @@ class MarkdownConverter:
                 el = el.parent
             bullets = self.options['bullets']
             bullet = bullets[depth % len(bullets)]
-        return '%s %s\n' % (bullet, text or '')
+        result = '%s %s' % (bullet, text or '')
+        if not result.endswith('\n'):
+            result += '\n'
+        return result
 
     def convert_div(self, el, text):
         text = text.rstrip()
