@@ -137,7 +137,11 @@ def parse_list_responses(lines):
 
 
 def gen_existing_files(path):
+    ignored_dirs = ['CVS', '.git', '.hg', '.svn']
     for root, dirs, files in os.walk(path):
+        for ignored in ignored_dirs:
+            if ignored in dirs:
+                dirs.remove(ignored)
         for file in files:
             yield unicodedata.normalize('NFD', os.path.join(root, file))
 

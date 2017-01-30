@@ -96,6 +96,8 @@ Changes
 ???
 ~~~
 
+* feature: ignore version control directories when backing up or
+  exporting to Markdown
 * bugfix: in Markdown, don't produce vertical whitespace for nested lists
 
 2017.1.0
