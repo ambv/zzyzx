@@ -45,12 +45,31 @@ It requires Python 3.5+ and Click. Just install it from PyPI::
    [backup]
    repo_path=~/Notes
    ignore_prefix=INBOX.Notes
+   $ zzyzx backup
+
+
+Markdown export
+---------------
+
+If you installed ``zzyzx[markdown]`` from PyPI, you can also run::
+
+   $ zzyzx md
+
+This will generate a list of files that are a textual representation
+of the notes' contents. This is useful for exporting Apple Notes into
+systems that expect Markdown files, like
+`Bear <http://www.bear-writer.com/>`_.
+
+Configure your Markdown support adding a section like the following
+to your `.zzyzx` config::
 
    [markdown]
    path=~/Dropbox/Notes
    extension=.txt
-   $ zzyzx backup
-   $ zzyzx md
+   headings=atx
+
+Headings can be "atx" (simple hashes), "atx_closed" (symmetrical
+hashes), or "underlined" (ReST-like).
 
 
 Why the name ``zzyzx``?
@@ -65,6 +84,11 @@ Known issues
 Don't put the repo path in Dropbox as it doesn't support symlinks and
 your other computers will see a lot of duplicate files.
 
+The Markdown export is not perfect because the HTML syntax used by
+Apple Notes is pretty strange. I did what I could, tested against a few
+hundred notes against macOS Sierra and iOS 10.2 (they are not consistent
+between each other either).
+
 
 Changes
 -------
@@ -72,6 +96,7 @@ Changes
 2017.1.0
 ~~~~~~~~
 
+* the Markdown export update: generally sucks less
 * also update the creation and modification date in the Markdown export
 * allow customization of the Markdown export file extensions
 * allow exporting folder-based hashtags (for example for use with Bear

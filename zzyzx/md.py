@@ -21,7 +21,13 @@ except ImportError:
 def md(cfg):
     """Reverse-engineers HTML notes to Markdown."""
 
+    if 'markdown' not in cfg or 'path' not in cfg['markdown']:
+        raise RuntimeError("Add a [markdown] section to your configuration.")
+
     ext = cfg['markdown'].get('extension', '.txt')
+    converter = markdownify.MarkdownConverter(
+        heading_style=cfg['markdown'].get('headings', 'atx'),
+    )
     use_tags = cfg['markdown'].getboolean('use_tags')
     tag = None
 
@@ -51,7 +57,7 @@ def md(cfg):
         txt_path = os.path.join(markdown_path, txt)
         if use_tags:
             tag = os.path.dirname(txt).replace(' ', '-')
-        saved_files = extract_files(eml_path, txt_path, tag=tag)
+        saved_files = extract_files(eml_path, txt_path, converter, tag=tag)
         existing_files -= saved_files
     for f in sorted(existing_files):
         click.echo('Deleting stale file {}'.format(f))
@@ -61,6 +67,7 @@ def md(cfg):
 def extract_files(
     src,
     dst,
+    converter,
     tag=None,
     email_parser=email.parser.BytesParser(policy=email.policy.default),
 ):
@@ -97,7 +104,7 @@ def extract_files(
     html = text_parts.pop('html', None)
     txt = text_parts.pop('plain', None)
     if html:
-        html = markdownify.markdownify(html)
+        html = converter.convert(html)
         os.makedirs(os.path.dirname(dst), exist_ok=True)
         with open(dst, 'w') as f:
             f.write(html)

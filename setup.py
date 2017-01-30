@@ -41,7 +41,7 @@ setup(
     ],
     extras_require={
         'collation': ["PyICU"],
-        'markdown': ["beautifulsoup4", "python-magic"],
+        'markdown': ["beautifulsoup4", "html5lib", "python-magic"],
     },
     classifiers=[
         'Development Status :: 3 - Alpha',
