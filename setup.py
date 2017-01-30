@@ -44,7 +44,7 @@ setup(
         'markdown': ["beautifulsoup4", "html5lib", "python-magic"],
     },
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 4 - Beta',
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
         'Programming Language :: Python',
