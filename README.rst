@@ -98,6 +98,7 @@ Changes
 
 * feature: ignore version control directories when backing up or
   exporting to Markdown
+* feature: keep modification dates in journal-style notes consistent
 * bugfix: in Markdown, don't produce vertical whitespace for nested lists
 
 2017.1.0

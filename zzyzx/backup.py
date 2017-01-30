@@ -97,10 +97,8 @@ def backup_mailbox(
         backup_path = os.path.join(notes_dir, filename)
         with open(backup_path, 'wb') as backup_file:
             backup_file.write(data[0][1])
-        # note: we're cheating, putting creation time as access time
-        os.utime(backup_path, (created.timestamp(), modified.timestamp()))
+        util.update_timestamps(backup_path, created, modified)
         updated_files[filename] = msg['subject']
-
         click.secho('{}) '.format(num.decode('ascii')), fg='green', nl=False)
         click.echo(created, nl=False)
         click.secho(' {}'.format(msg['subject']), bold=True)
@@ -148,4 +146,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-

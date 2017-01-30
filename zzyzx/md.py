@@ -132,15 +132,7 @@ def extract_files(
                 f.write('\n#{}\n'.format(tag))
             files.add(filename)
     for f in files:
-        # note: we're cheating, putting creation time as access time
-        os.utime(f, (created.timestamp(), modified.timestamp()))
-        try:
-            # Hack to keep journal-style entries sane
-            timestamp = util.convert_to_timestamp(os.path.basename(basename))
-            if modified.timestamp() - timestamp > 24 * 60 * 60:
-                os.utime(f, (timestamp, timestamp))
-        except ValueError:
-            continue
+        util.update_timestamps(f, created, modified)
     return files
 
 

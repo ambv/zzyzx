@@ -307,3 +307,22 @@ def convert_to_timestamp(text):
         raise exc from None
 
     return dt.timestamp()
+
+
+def update_timestamps(path, created, modified):
+    base, ext = os.path.splitext(path)
+    basename = os.path.basename(base)
+
+    # First, a hack to keep journal-style entries sane
+    try:
+        timestamp = convert_to_timestamp(basename)
+    except ValueError:
+        pass
+    else:
+        if modified.timestamp() - timestamp > 24 * 60 * 60:
+            os.utime(path, (timestamp, timestamp))
+            return
+
+    # Didn't work out, let's use the provided datetime objects.
+    # Note: we're cheating, putting creation time as access time. Thanks POSIX.
+    os.utime(path, (created.timestamp(), modified.timestamp()))
