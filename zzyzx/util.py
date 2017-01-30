@@ -3,6 +3,7 @@
 from collections import namedtuple
 import configparser
 from contextlib import contextmanager
+from datetime import datetime
 from functools import cmp_to_key
 from functools import update_wrapper
 import getpass
@@ -287,3 +288,18 @@ def hg_commit(hg, repo_path, metadata):
 
         finally:
             os.chdir(old_cwd)
+
+
+def convert_to_timestamp(text):
+    formats = ['%Y-%m-%d']  # feel free to extend, I only needed this one
+    exc = None
+    dt = None
+    for format in formats:
+        try:
+            dt = datetime.strptime(text, format)
+        except ValueError as ve:
+            exc = ve
+    if exc and not dt:
+        raise exc from None
+
+    return dt.timestamp()
