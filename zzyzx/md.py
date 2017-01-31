@@ -51,15 +51,22 @@ def md(cfg):
             ),
         ),
     )
+    saved_files = set()
     for eml in eml_files:
         txt = eml[:-4] + ext
         eml_path = os.path.join(repo_path, eml)
         txt_path = os.path.join(markdown_path, txt)
+        if txt_path in saved_files:
+            count = 1
+            while '{}_{}'.format(txt_path, count) in saved_files:
+                count += 1
+            txt_path = '{}_{}'.format(txt_path, count)
         if use_tags:
             tag = os.path.dirname(txt).replace(' ', '-')
-        saved_files = extract_files(eml_path, txt_path, converter, tag=tag)
-        existing_files -= saved_files
-    for f in sorted(existing_files):
+        saved_files.update(
+            extract_files(eml_path, txt_path, converter, tag=tag)
+        )
+    for f in sorted(existing_files - saved_files):
         click.echo('Deleting stale file {}'.format(f))
         os.unlink(f)
 
