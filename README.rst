@@ -99,6 +99,8 @@ Changes
 * feature: ignore version control directories when backing up or
   exporting to Markdown
 * feature: keep modification dates in journal-style notes consistent
+* bugfix: for `.eml` symlinks, don't overwrite symlinks for notes with the
+  same title
 * bugfix: for `.md` exports, don't overwrite files with the same title
 * bugfix: for `.md` exports, disambiguate titles from content
 * bugfix: for `.md` exports, don't produce vertical whitespace for nested

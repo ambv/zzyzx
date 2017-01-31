@@ -125,13 +125,17 @@ def symlink_uuids_to_human_readable_titles(updated_files, notes_dir):
     paths = {}
     for uuid, title in updated_files.items():
         title = util.make_filename_safe(title)
-        i = 0
+        i = 1
         while title in paths.values():
-            title += uuid[i]
-            i += 1
-        paths[uuid] = title + '.eml'
-
+            try:
+                title += uuid[i]
+            except IndexError:
+                break
+            else:
+                i += 1
+        paths[uuid] = title
     for uuid, title in paths.items():
+        title = title + '.eml'
         src = os.path.join(notes_dir, uuid)
         dst = os.path.join(notes_dir, title)
         if os.path.exists(dst):
