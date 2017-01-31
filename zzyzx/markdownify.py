@@ -59,22 +59,22 @@ class MarkdownConverter:
 
     def process_tag(self, node, is_main_document=False):
         text = ''
-        tags_found = False
+        title_processed = False
 
         # Convert the children first
         for el in node.children:
             if isinstance(el, NavigableString):
                 text += self.process_text(str(el))
             else:
-                if is_main_document and not tags_found:
+                if is_main_document and text and not title_processed:
                     # Apple Notes' title is just text crammed into the body
                     # without any tags.
-                    if text:
+                    if len(text) < 80:
+                        # Naive heuristic but better than nothing.
+                        text = '# ' + text.lstrip()
+                    while not text.endswith('\n\n'):
                         text += '\n'
-                        if len(text) < 80:
-                            # Naive heuristic but better than nothing.
-                            text = '# ' + text
-                    tags_found = True
+                    title_processed = True
                 text += self.process_tag(el)
 
         if not is_main_document:
