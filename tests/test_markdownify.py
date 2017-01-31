@@ -15,7 +15,7 @@ def d(text):
     result = textwrap.dedent(text)
     if result.startswith('\n'):
         result = result[1:]
-    result = result.replace('#', '')
+    result = result.replace('?', '')
     return result
 
 
@@ -26,9 +26,58 @@ class MarkdownifyTest(unittest.TestCase):
             <div>Four</div>
         """)
         expected = d("""
-        One
+        # One
+
 
         TwoThree
+
+        Four
+        """)
+        actual = markdownify.MarkdownConverter().convert(html)
+        self.assertEqual(expected, actual)
+
+    def test_apple_notes_whitespace2(self):
+        html = d("""
+            One<div><br></div>Two<div>Three</div><div><br></div>
+            <div>Four</div>
+        """)
+        expected = d("""
+        # One
+
+
+        TwoThree
+
+        Four
+        """)
+        actual = markdownify.MarkdownConverter().convert(html)
+        self.assertEqual(expected, actual)
+
+    def test_apple_notes_whitespace3(self):
+        html = d("""
+            One<div>Two</div><div>Three</div><div><br></div>
+            <div>Four</div>
+        """)
+        expected = d("""
+        # One
+
+        Two
+        Three
+
+        Four
+        """)
+        actual = markdownify.MarkdownConverter().convert(html)
+        self.assertEqual(expected, actual)
+
+    def test_apple_notes_whitespace3(self):
+        html = d("""
+            <div>One</div><div>Two</div><div>Three</div><div><br></div>
+            <div>Four</div>
+        """)
+        expected = d("""
+        # One
+
+        Two
+        Three
 
         Four
         """)
@@ -82,19 +131,20 @@ class MarkdownifyTest(unittest.TestCase):
             3. Yeah
             \t1. Nope
             \t2. Nope
-            \t3. Nope \t#
+            \t3. Nope \t?
             \t\t1. Maybe
             \t\t2. Maybe
             \t\t3. Maybe
             4. Yeah
             5. Yeah
             6. Yeah
+
             * Yeah
             * Yeah
             * Yeah
             \t+ Nope
             \t+ Nope
-            \t+ Nope \t#
+            \t+ Nope \t?
             \t\t- Maybe
             \t\t- Maybe
             \t\t- Maybe
