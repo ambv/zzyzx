@@ -5,6 +5,7 @@ import email.parser
 import email.utils
 import mimetypes
 import os
+import sys
 
 import click
 
@@ -13,7 +14,10 @@ from zzyzx import util
 try:
     import magic
     from zzyzx import markdownify
-except ImportError:
+except ImportError as e:
+    if 'failed to find libmagic' in str(e):
+        print('warning:', e, file=sys.stderr)
+        print('warning: the `md` command will not be available', file=sys.stderr)
     markdownify = None
 
 
